@@ -61,7 +61,6 @@ function handleIncomingData(data) {
         winston.error('Buffer length does not match the reported length.');
         sendResult(false);
     }
-    sendResult(false);
 }
 
 /**
