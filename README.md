@@ -33,11 +33,13 @@ run() takes a configuration object. It takes the following options:
 ```
 auth: function(callback, userName, domainName, password)
 ```
+
  	* ___isuser:___ Called, when ejabberd needs to check, if a JID exists.  
 ```
 isuser: function(callback, userName)
 ```
-	* ___setpass:___ Called, when a user tries to change his password. Change the password and call the callback with _true_, to signalize, that the password was successfully changed.
+
+   * ___setpass:___ Called, when a user tries to change his password. Change the password and call the callback with _true_, to signalize, that the password was successfully changed.
 ```
 setpass: function(callback)
 ```
