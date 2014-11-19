@@ -29,12 +29,12 @@ run() takes a configuration object. It takes the following options:
 
 * __log:__ Configuration for the Winston File transport used for logging (refer the [winston documentation](https://github.com/flatiron/winston/blob/master/docs/transports.md#file-transport) for more details). If no _log_ configuration or _filename_ is given, logging will be disabled.
 * __actions:__ An object containing callback functions for the module to call, when ejabberd requests an action. Possible keys are:
-	* ___auth:___ Called, when a user tries to log in. Call the callback with _true_ to allow the user to enter.  
+   * ___auth:___ Called, when a user tries to log in. Call the callback with _true_ to allow the user to enter.  
 ```
 auth: function(callback, userName, domainName, password)
 ```
 
- 	* ___isuser:___ Called, when ejabberd needs to check, if a JID exists.  
+   * ___isuser:___ Called, when ejabberd needs to check, if a JID exists.  
 ```
 isuser: function(callback, userName)
 ```
