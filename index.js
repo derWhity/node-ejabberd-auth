@@ -33,12 +33,26 @@ var stdout = process.stdout;
  */
 var registeredActions = {};
 
+/**
+ * Set to true, when internal logging is enabled.
+ * If no log file or log configuration is given, loggin will be disabled for this lib.
+ *
+ * @type {Boolean}
+ */
+var logEnabled = false;
+
 //-- Helper functions -----------------------------------------------------------------------------
 
+function doLog() {
+    if (logEnabled) {
+        winston.log.apply(winston, arguments);
+    }
+}
+
 function handleIncomingData(data) {
-    winston.debug('Incoming data via stdin');
+    doLog('debug', 'Incoming data via stdin');
     var len = data.readUInt16BE(0);
-    winston.debug('Data length is reported as: ' + len);
+    doLog('debug', 'Data length is reported as: ' + len);
     // TODO: Better buffer handling
     if (data.length -2 === len) {
         //Read the data from the buffer
@@ -50,15 +64,15 @@ function handleIncomingData(data) {
             if (registeredActions[cmd]) {
                 registeredActions[cmd].apply(this, parts);
             } else {
-                winston.error('Unknown action "' + cmd + '" requested by ejabberd');
+                doLog('error', 'Unknown action "' + cmd + '" requested by ejabberd');
                 sendResult(false);
             }
         } else {
-            winston.error('Illegal parameter count');
+            doLog('error', 'Illegal parameter count');
             sendResult(false);
         }
     } else {
-        winston.error('Buffer length does not match the reported length.');
+        doLog('error', 'Buffer length does not match the reported length.');
         sendResult(false);
     }
 }
@@ -72,9 +86,9 @@ function sendResult(result) {
     var data = result === true ? 0x1 : 0x0;
     if (result && result !== true) {
         // An error may be returned - log it
-        winston.error('Action returned an error', result);
+        doLog('error', 'Action returned an error', result);
     }
-    winston.debug('Sending result to stdout: ' + data);
+    doLog('debug', 'Sending result to stdout: ' + data);
     var outBuf = new Buffer(4);
     outBuf.writeUInt16BE(0x2, 0);
     outBuf.writeUInt16BE(data, 2);
@@ -127,6 +141,7 @@ function run(config) {
     // Configure the logger
     if (config && config.log && config.log.filename) {
         winston.add(winston.transports.File, config.log);
+        logEnabled = true;
     }
     // Remove the console transport, since stdout will be used by ejabberd to receive responses
     winston.remove(winston.transports.Console);
@@ -144,13 +159,13 @@ function run(config) {
     stdin.on('data', handleIncomingData);
 
     process.on('exit', function() {
-        logger.info('Auth process is shutting down.');
+        doLog('info', 'Auth process is shutting down.');
     });
 
     // Catch exceptions to log them - debugging errors will be a lot harder if this is not
     // done, since ejabberd just tells us that the external script has crashed.
     process.on('uncaughtException', function(err) {
-        logger.error('Uncaught exception' + err.toString());
+        doLog('error', 'Uncaught exception' + err.toString());
         // Rethrow the exception
         throw err;
     });
