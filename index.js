@@ -157,6 +157,10 @@ function run(config) {
 
     // Register the event listeners for handling requests
     stdin.on('data', handleIncomingData);
+	stdin.on('exit', function(){
+		doLog('info', 'Received end on stdin, shutting down');
+		process.exit(255);
+	});
 
     process.on('exit', function() {
         doLog('info', 'Auth process is shutting down.');
