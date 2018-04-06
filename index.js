@@ -93,6 +93,7 @@ function sendResult(result) {
     outBuf.writeUInt16BE(0x2, 0);
     outBuf.writeUInt16BE(data, 2);
     stdout.write(outBuf);
+    stdout.flush();
 }
 
 //-- Main export ----------------------------------------------------------------------------------
