@@ -35,7 +35,7 @@ var registeredActions = {};
 
 /**
  * Set to true, when internal logging is enabled.
- * If no log file or log configuration is given, loggin will be disabled for this lib.
+ * If no log file or log configuration is given, logging will be disabled for this lib.
  *
  * @type {Boolean}
  */
