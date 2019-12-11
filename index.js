@@ -89,7 +89,7 @@ function sendResult(result) {
         doLog('error', 'Action returned an error', result);
     }
     doLog('debug', 'Sending result to stdout: ' + data);
-    var outBuf = new Buffer(4);
+    var outBuf = Buffer.alloc(4);
     outBuf.writeUInt16BE(0x2, 0);
     outBuf.writeUInt16BE(data, 2);
     stdout.write(outBuf);
