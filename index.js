@@ -140,7 +140,7 @@ function sendResult(result) {
 function run(config) {
     // Configure the logger
     if (config && config.log && config.log.filename) {
-        winston.add(winston.transports.File, config.log);
+        winston.add(new winston.transports.File(config.log));
         logEnabled = true;
     }
     // Remove the console transport, since stdout will be used by ejabberd to receive responses
